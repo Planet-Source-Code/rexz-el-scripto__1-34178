@@ -1,0 +1,8 @@
+noend()
+dim msg
+open ("1","Test Window")
+
+msg ~ min ("Enter something to print","Enter","")
+
+print ("1",msg)
+

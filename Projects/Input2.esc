@@ -1,0 +1,17 @@
+noend()
+open ("1","win")
+dim a 
+a = "0"
+
+while (a) < ("100")
+doevents()
+if (a) = ("98")
+a = "0"
+endif
+a = a + "1"
+screen ("clear","1")
+on key("return")
+return: print("1",a)
+exit
+
+

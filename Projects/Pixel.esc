@@ -1,0 +1,14 @@
+noend()
+open ("1","window")
+
+screen ("clear","1")
+
+    set ("backcolor","1","black")
+    set ("forecolor","1","white")
+    set ("cx","1","10")
+    set ("cy","1","10")
+
+screen ("pixel","1")
+
+
+

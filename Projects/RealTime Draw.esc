@@ -1,0 +1,23 @@
+noend()
+dim x,y,buffer
+
+
+x = "10"
+y = "0"
+
+buffer = "170"
+
+open ("1","Window")
+
+set ("backcolor","1","black")
+set ("forecolor","1","green")
+
+while (y) < (buffer)
+y = y + "1"
+
+screen ("pixel","1","10",y)
+
+doevents()
+
+exit
+

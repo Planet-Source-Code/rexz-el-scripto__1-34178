@@ -1,0 +1,45 @@
+noend()
+open ("1","window")
+option ("1","mode","3")
+
+
+dim a,b,y,border,c1,c2,c3
+
+c1 = "0"
+a = "0"
+y = "0"
+b = "100"
+border ~ height("1")
+
+set ("backcolor","1","black")
+
+while (y) < (border)
+line ("1","0",y,"1000",y)
+y = y + "0.5"
+
+c1 = c1 + "1"
+
+c3 ~ random("2")
+if (c3) = ("0")
+c2 ~ rgb("0","0",c1)
+endif
+if (c3) = ("1")
+c2 ~ rgb("0",c1,"0")
+endif
+if (c3) = ("2")
+c2 ~ rgb(c1,"0","0")
+endif
+
+border ~ height("1")
+set ("forecolor","1",c2)
+
+on key("escape")
+return: end("app")
+
+doevents()
+exit
+
+
+
+
+
