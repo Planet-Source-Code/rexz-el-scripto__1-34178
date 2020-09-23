@@ -1,0 +1,7 @@
+ÿbEl Scripto Help version 0.1
+By Hans Bjerndell 2001
+ 
+This is just another aptempt of an own language or script or whatever you want 
+to call it. It's quite cool though, it supports add-ins, custom controls, networks, 
+ELL (a filetype i came up with :) ) witch stands for Extern Link Library. I didn't 
+bother embedding dll reading functions here!

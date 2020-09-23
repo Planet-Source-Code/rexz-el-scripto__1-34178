@@ -1,0 +1,285 @@
+If FindPart(sLine, " ") = 1 Then
+        Feed = Split(sLine, " ")
+        Command = Feed(0)
+        Else
+        Command = sLine
+        End If
+        
+        If Left(sLine, 2) = "//" Then
+        GoTo skipcurrentdo
+        End If
+        
+        
+        ' We'll start with the basic commands :)
+        Select Case LCase(Command)
+        Case "cls"
+        Dim index As Integer
+        index = Mid(sLine, InStr(sLine, ">") + 1)
+        ScriptForm(index).Cls
+        Case "draw"
+        
+        
+            Select Case LCase(Feed(1))
+            
+            Case "pixel"
+            
+            Dim Info() As String, infoline As String
+            infoline = Mid(sLine, InStr(sLine, "(") + 1, InStr(sLine, ")") - InStr(sLine, "(") - 1)
+            Info = Split(infoline, ",")
+            If Info(1) = "%" Then
+            Info(1) = Int(ScriptForm(Info(0)).ScaleWidth * Rnd)
+            Else
+            End If
+            If Info(2) = "%" Then
+            Info(2) = Int(ScriptForm(Info(0)).ScaleHeight * Rnd)
+            Else
+            End If
+            ScriptForm(Info(0)).PSet (CInt(Info(1)), CInt(Info(2))), Convert2Color(Info(3))
+            
+            Case "line"
+            
+            Dim Io() As String, ioline As String
+            ioline = Mid(sLine, InStr(sLine, "(") + 1, InStr(sLine, ")") - InStr(sLine, "(") - 1)
+            Io = Split(ioline, ",")
+            
+            If Io(1) = "%" Then
+            Io(1) = Int(ScriptForm(Io(0)).ScaleWidth * Rnd)
+            Else
+            End If
+            If Io(2) = "%" Then
+            Io(2) = Int(ScriptForm(Io(0)).ScaleHeight * Rnd)
+            Else
+            End If
+            If Io(3) = "%" Then
+            Io(3) = Int(ScriptForm(Io(0)).ScaleHeight * Rnd)
+            Else
+            End If
+            If Io(4) = "%" Then
+            Io(4) = Int(ScriptForm(Io(0)).ScaleHeight * Rnd)
+            Else
+            End If
+            ScriptForm(Io(0)).Line (Io(3), Io(4))-(Io(1), Io(2)), Convert2Color(Io(5))
+
+            
+            Case "text"
+            Dim inf() As String, infline As String
+            infline = Mid(sLine, InStr(sLine, "(") + 1, InStr(sLine, ")") - InStr(sLine, "(") - 1)
+            inf = Split(infline, ",")
+            ScriptForm(inf(0)).CurrentX = inf(1)
+            ScriptForm(inf(0)).CurrentY = inf(2)
+            
+            If FindPart(inf(3), Chr(34)) = 0 Then
+            Dim c, vartext As String, MultiVar() As String, r
+            vartext = ""
+            If FindPart(inf(3), "&") = 1 Then
+            MultiVar = Split(inf(3), "&")
+            Else
+            End If
+            For c = 1 To Variable.Count
+            
+            If FindPart(inf(3), "&") = 1 Then
+            
+            For r = 0 To UBound(MultiVar)
+            
+            If MultiVar(r) = Mid(Variable.Item(c), 1, InStr(Variable.Item(c), ":") - 1) Then
+            If FindPart(Variable.Item(c), ":") = 1 Then
+            vartext = vartext & Mid(Variable.Item(c), InStr(Variable.Item(c), ":") + 1)
+            End If
+            End If
+            
+            Next r
+            
+            ElseIf FindPart(inf(3), "&") = 0 Then
+            
+            If inf(3) = Mid(Variable.Item(c), 1, InStr(Variable.Item(c), ":") - 1) Then
+            If FindPart(Variable.Item(c), ":") = 1 Then
+            vartext = Mid(Variable.Item(c), InStr(Variable.Item(c), ":") + 1)
+            End If
+            End If
+            
+            End If
+            
+            Next c
+            End If
+            
+            If FindPart(inf(3), Chr(34)) = 0 Then
+            ScriptForm(inf(0)).Print vartext
+            Else
+            inf(3) = Replace(inf(3), Chr(34), "")
+            ScriptForm(inf(0)).Print inf(3)
+            End If
+            
+            End Select
+        
+        Case "loop"
+        If Left(Feed(1), 1) = "#" Then
+        bloop = True
+        loopname = Feed(1)
+        loopplace = nCurrentLine
+        Else
+        Errors = error + 1
+        End If
+        
+        Case "do"
+        Dim a
+        If bloop = True Then
+        If Feed(1) = loopname Then
+        Pause 1
+        nCurrentLine = loopplace
+        Else
+        Errors = Errors + 1
+        End If
+        Else
+        GoTo skipcurrentdo
+        End If
+        
+        Case "mout"
+        If FindPart(sLine, Chr(34)) = 1 Then
+        MsgBox Replace(Mid(sLine, InStr(sLine, " ") + 1), Chr(34), "")
+        Else
+        Dim d As Integer
+        For d = 1 To Variable.Count
+        If Mid(sLine, InStr(sLine, " ") + 1) = Mid(Variable.Item(d), 1, InStr(Variable.Item(d), ":") - 1) Then
+        If FindPart(Variable.Item(d), ":") = 1 Then
+        MsgBox Mid(Variable.Item(d), InStr(Variable.Item(d), ":") + 1)
+        Else
+        MsgBox "Undefined."
+        End If
+        Exit For
+        End If
+        
+        Next d
+        End If
+        
+        Case "exit"
+        bloop = False
+        
+        Case "wnd"
+        
+            Select Case LCase(Feed(1))
+            Case "create"
+            Dim index2 As Integer, nCaption As String
+            index2 = Mid(sLine, InStr(sLine, "[") + 1, InStr(sLine, "]") - InStr(sLine, "[") - 1)
+            nCaption = Mid(sLine, InStr(sLine, "~") + 1, InStr(sLine, "[") - InStr(sLine, "~") - 1)
+            Set ScriptForm(index2) = New frmWindow
+            ScriptForm(index2).Caption = nCaption
+            
+            Case "show"
+            ScriptForm(Feed(2)).Show
+            
+            Case "set"
+            Select Case LCase(Feed(2))
+            Case "bgcolor"
+            If LCase(Feed(3)) = "black" Then
+            ScriptForm(Feed(4)).BackColor = vbBlack
+            ElseIf LCase(Feed(3)) = "white" Then
+            ScriptForm(Feed(4)).BackColor = vbWhite
+            ElseIf LCase(Feed(3)) = "green" Then
+            ScriptForm(Feed(4)).BackColor = vbGreen
+            ElseIf LCase(Feed(3)) = "blue" Then
+            ScriptForm(Feed(4)).BackColor = vbBlue
+            ElseIf LCase(Feed(3)) = "red" Then
+            ScriptForm(Feed(4)).BackColor = vbRed
+            End If
+            
+            Case "fcolor"
+            If Feed(3) = "black" Then
+            ScriptForm(Feed(4)).ForeColor = vbBlack
+            ElseIf Feed(3) = "white" Then
+            ScriptForm(Feed(4)).ForeColor = vbWhite
+            ElseIf Feed(3) = "green" Then
+            ScriptForm(Feed(4)).ForeColor = vbGreen
+            ElseIf Feed(3) = "blue" Then
+            ScriptForm(Feed(4)).ForeColor = vbBlue
+            ElseIf Feed(3) = "red" Then
+            ScriptForm(Feed(4)).ForeColor = vbRed
+            End If
+            
+            Case "mode"
+            If Feed(3) > -1 And Feed(3) < 8 Then
+            ScriptForm(Feed(4)).ScaleMode = Feed(3)
+            Else
+            MsgBox "Invalid mode value.", vbCritical + vbOKOnly, "Error"
+            Exit Function
+            Errors = Errors + 1
+            End If
+            End Select
+            
+            
+            End Select
+        
+        Case "var"
+        If FindPart(sLine, "=") = 1 Then
+        If Feed(2) = "=" Then
+        Variable.Add Feed(1) & ":" & Mid(sLine, InStr(sLine, "=") + 2)
+        Else
+        Errors = Errors + 1
+        End If
+        Else
+        Variable.Add Feed(1)
+        End If
+        
+        Case "function"
+        Dim v As Integer
+        v = nCurrentLine + 1
+        Do Until GetLine(v) = "}"
+        DoEvents
+        v = v + 1
+        If v >= UBound(arTemp) - 1 Then
+        Errors = Errors + 1
+        GoTo skipcurrentdo
+        Else
+        Functions.Add Feed(1)
+        FuncPlace.Add nCurrentLine
+        nCurrentLine = v
+        GoTo skipcurrentdo
+        End If
+        Loop
+        
+        Case "call"
+        Dim e
+        For e = 0 To Functions.Count
+        If Feed(1) = Functions.Item(e) Then
+        nCurrentLine = FuncPlace.Item(e)
+        End If
+        Next e
+        
+        Case "delay"
+        If Feed(1) < 1 Then
+        Errors = Errors + 1
+        ShowError 2, nCurrentLine
+        ExitExecute
+        Else
+        Pause CLng(Feed(1))
+        End If
+        
+        Case "load"
+        Dim filename As String
+        filename = Mid(sLine, InStr(sLine, "<") + 1, InStr(sLine, ">") - InStr(sLine, "<") - 1)
+        
+        Case "beep"
+        Beep
+        
+        Case "+"
+        Dim å
+        For å = 1 To Variable.Count
+        If Feed(1) = Mid(Variable.Item(å), Variable.Item(å), InStr(Variable.Item(å), ":") - 1) Then
+        If Mid(Variable.Item(å), InStr(Variable.Item(å), ":") + 1) <> "" Then
+        Errors = Errors + 1
+        ShowError 2, nCurrentLine
+        Exit For
+        Else
+        Dim oldval As Integer, newval As Integer
+        oldval = Mid(Variable.Item(å), InStr(Variable.Item(å), ":") + 1)
+        newval = oldval + Feed(2)
+        Variable.Remove å
+        Variable.Add Feed(1) & ":" & newval
+        End If
+        
+        Else
+        Errors = Errors + 1
+        ShowError 4, nCurrentLine
+        Exit For
+        End If
+        Next å
+        End Select

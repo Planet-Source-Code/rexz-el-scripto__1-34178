@@ -1,0 +1,28 @@
+noend()
+
+open ("1","window")
+
+dim a
+
+a = "0"
+
+while (a) < ("100")
+if (a) > ("98")
+a = "0"
+endif
+a = a + "1"
+screen ("clear","1")
+
+on key("escape")
+return: end("app")
+
+on key("space")
+return: keydown("1")
+
+on key("return")
+return: keydown("1")
+doevents()
+exit
+
+
+

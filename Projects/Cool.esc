@@ -1,0 +1,17 @@
+dim msg,da
+
+msg = "b"
+
+open ("1","window")
+open ("2","window 2")
+open ("3","window 3")
+
+da ~ min ("Enter form to print to","Ener form","1")
+
+print (da,msg)
+
+if (msg) = ("a")
+print (da,"Variablen [msg] är lika med [a]")
+else
+print (da,"Variablen [msg] är INTE lika med [a]")
+end

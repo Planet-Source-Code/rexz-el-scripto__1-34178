@@ -1,0 +1,14 @@
+noend()
+dim pic
+
+pic = "c:\windows\1stboot.bmp"
+
+open ("1","Window")
+
+    set ("cx","1","10")
+    set ("cy","1","10")
+    set ("forecolor","1","white")
+
+screen ("picture","1",pic)
+
+
